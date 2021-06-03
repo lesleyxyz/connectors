@@ -60,11 +60,6 @@ OPENCTISTIX2 = {
     "registry-key": {"type": "windows-registry-key", "path": ["key"]},
     "registry-key-value": {"type": "windows-registry-value-type", "path": ["data"]},
     "pdb-path": {"type": "file", "path": ["name"]},
-    "windows-service-name": {"type": "windows-service-ext", "path": ["service_name"]},
-    "windows-service-display-name": {
-        "type": "windows-service-ext",
-        "path": ["display_name"],
-    },
     "x509-certificate-issuer": {"type": "x509-certificate", "path": ["issuer"]},
     "x509-certificate-serial-number": {
         "type": "x509-certificate",
@@ -414,7 +409,7 @@ class Misp:
                         )
 
                     object_observable = SimpleObservable(
-                        id="x-opencti-simple-observable--" + object["uuid"],
+                        id=OpenCTIStix2Utils.generate_random_stix_id("x-opencti-simple-observable"),
                         key="X-OpenCTI-Text.value",
                         value=object["name"] + unique_key,
                         description=object["description"],
@@ -691,7 +686,7 @@ class Misp:
             indicator = None
             if self.misp_create_indicators:
                 indicator = Indicator(
-                    id="indicator--" + attribute["uuid"],
+                    id=OpenCTIStix2Utils.generate_random_stix_id("indicator"),
                     name=name,
                     description=attribute["comment"],
                     confidence=self.helper.connect_confidence_level,
@@ -719,7 +714,7 @@ class Misp:
             observable = None
             if self.misp_create_observables and observable_type is not None:
                 observable = SimpleObservable(
-                    id="x-opencti-simple-observable--" + attribute["uuid"],
+                    id=OpenCTIStix2Utils.generate_random_stix_id("x-opencti-simple-observable"),
                     key=observable_type
                     + "."
                     + ".".join(OPENCTISTIX2[observable_resolver]["path"]),
@@ -1273,12 +1268,6 @@ class Misp:
             "email-src": [{"resolver": "email-address", "type": "Email-Addr"}],
             "email-dst": [{"resolver": "email-address", "type": "Email-Addr"}],
             "url": [{"resolver": "url", "type": "Url"}],
-            "windows-service-name": [
-                {"resolver": "windows-service-name", "type": "Process"}
-            ],
-            "windows-service-displayname": [
-                {"resolver": "windows-service-display-name", "type": "Process"}
-            ],
             "windows-scheduled-task": [
                 {"resolver": "windows-scheduled-task", "type": "X-OpenCTI-Text"}
             ],
